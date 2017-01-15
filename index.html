@@ -1,0 +1,77 @@
+<html>
+<head>
+<title>MamCieNaHita - suby</title>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+  html {
+   background-color: #1C1C1C;
+  }
+  body {
+   background-color: #1C1C1C;
+  }
+  #wypok {
+    background-color: #1C1C1C;
+    color: red;
+  }
+  div {
+    background-color: #1C1C1C;
+  }
+  div.user{
+    color: white;
+    height: 50px;
+    width: 600px;
+  }
+  div.header{
+    color: #ffffaa;
+    width: 300px;
+    height: 50px;
+  }
+
+</style>
+</head>
+<body ng-app="Wykop" ng-controller="WykopController as ctrl" layout="column">
+<center>
+ <div ng-repeat="state in statearr">
+  <div class="header" layout-align="center start">
+    {{states[state]}}
+  </div>
+  <div ng-repeat="user in data" layout="row" layout-align="space-between center" ng-show="user.state===state" class="user">
+    <div>
+        <img ng-src={{user.avatar}} />
+    </div>
+    <div>
+       {{user.name}}
+    </div>
+    <div>
+       {{GetDate(user.timestamp)}}
+    </div>
+  </div>
+</div>
+</center>
+<script type="text/javascript">
+	function WykopController($scope, $http) {
+      $scope.data=[];
+    $http.get('http://127.0.0.1:4000/').then(function(response){
+      $scope.data=response.data;
+    });
+      $scope.states={
+       "New": "Ostatnie suby:",
+       "Existing": "Suby:",
+       "Revoked": "Zabrane suby:",
+      };
+      $scope.statearr=["New", "Existing", "Revoked"];
+      $scope.GetDate = (unix_timestamp)=>(new Date(unix_timestamp * 1000)).toUTCString();
+      $scope.GetImg = (src)=>'src="'+src+'"';
+  }
+  angular
+    .module('Wykop', ['ngMaterial'])
+    .controller('WykopController', WykopController);
+</script>
+</body>
+</html>
